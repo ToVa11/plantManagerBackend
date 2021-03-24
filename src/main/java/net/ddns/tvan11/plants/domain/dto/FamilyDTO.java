@@ -1,36 +1,28 @@
-package net.ddns.tvan11.plants.domain;
+package net.ddns.tvan11.plants.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import net.ddns.tvan11.plants.domain.Plant;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Family implements Serializable {
+public class FamilyDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "family")
-    @JsonManagedReference
     private List<Plant> plants = new ArrayList<>();
 
-    public Family() {
+    public FamilyDTO() {
     }
 
-    public Family(String name) {
-        this.name = name;
-    }
-
-    public Family(String name, List<Plant> plants) {
+    public FamilyDTO(Long id, String name, List<Plant> plants) {
+        this.id = id;
         this.name = name;
         this.plants = plants;
+    }
+
+    public FamilyDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {

@@ -1,11 +1,14 @@
 package net.ddns.tvan11.plants.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Plant {
+public class Plant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,7 @@ public class Plant {
     private String remarks;
 
     @ManyToOne
+    @JsonBackReference
     private Family family;
 
     public Plant() {
@@ -86,7 +90,6 @@ public class Plant {
         this.remarks = remarks;
     }
 
-    @JsonBackReference
     public Family getFamily() {
         return family;
     }

@@ -1,7 +1,9 @@
 package net.ddns.tvan11.plants.resource;
 
 import net.ddns.tvan11.plants.domain.Family;
+import net.ddns.tvan11.plants.domain.dto.FamilyDTO;
 import net.ddns.tvan11.plants.repository.FamilyRepository;
+import net.ddns.tvan11.plants.service.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,17 @@ public class FamilyResource {
 
     @Autowired
     private FamilyRepository familyRepository;
+    @Autowired
+    private FamilyService familyService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Family>> getAllFamilies() {
-        return new ResponseEntity<>(familyRepository.findAll(), OK);
+    public ResponseEntity<List<FamilyDTO>> getAllFamilies() {
+        return new ResponseEntity<>(familyService.getFamilies(), OK);
+    }
+
+    @GetMapping("/listNames")
+    public ResponseEntity<List<FamilyDTO>> getFamilyNames() {
+        return new ResponseEntity<>(familyService.getFamiliesWithPlants(), OK);
     }
 
     @PostMapping("/add")
