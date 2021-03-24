@@ -44,7 +44,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(STATELESS).and()
-                .authorizeRequests().antMatchers(new String[] {"/auth/login","/plant/list"}).permitAll()
+                .authorizeRequests().antMatchers(new String[] {"/auth/login","/family/list"}).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(this.jwtAccessDeniedHandler)

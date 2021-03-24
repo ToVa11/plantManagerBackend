@@ -1,5 +1,7 @@
 package net.ddns.tvan11.plants.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -84,6 +86,7 @@ public class Plant {
         this.remarks = remarks;
     }
 
+    @JsonBackReference
     public Family getFamily() {
         return family;
     }

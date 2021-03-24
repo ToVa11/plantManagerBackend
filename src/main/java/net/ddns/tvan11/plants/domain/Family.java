@@ -1,5 +1,7 @@
 package net.ddns.tvan11.plants.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,11 @@ public class Family {
         this.name = name;
     }
 
+    public Family(String name, List<Plant> plants) {
+        this.name = name;
+        this.plants = plants;
+    }
+
     public Long getId() {
         return id;
     }
@@ -37,5 +44,14 @@ public class Family {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonManagedReference
+    public List<Plant> getPlants() {
+        return plants;
+    }
+
+    public void setPlants(List<Plant> plants) {
+        this.plants = plants;
     }
 }

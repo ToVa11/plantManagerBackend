@@ -22,4 +22,5 @@ public class PlantResource {
     public ResponseEntity<List<Plant>> getPlants() {
         return new ResponseEntity<>(plantRepository.findAll(), HttpStatus.OK);
     }
+
 }
