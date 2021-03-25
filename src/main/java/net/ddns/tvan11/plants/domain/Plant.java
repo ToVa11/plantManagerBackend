@@ -30,6 +30,10 @@ public class Plant implements Serializable {
     @JsonBackReference
     private Family family;
 
+    private String headerImageUrl;
+
+    private String profileImageUrl;
+
     public Plant() {
     }
 
@@ -96,5 +100,21 @@ public class Plant implements Serializable {
 
     public void setFamily(Family family) {
         this.family = family;
+    }
+
+    public String getHeaderImageUrl() {
+        return headerImageUrl;
+    }
+
+    public void setHeaderImageUrl(String headerImageUrl) {
+        this.headerImageUrl = headerImageUrl;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
