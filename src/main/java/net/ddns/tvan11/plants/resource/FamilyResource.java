@@ -25,12 +25,12 @@ public class FamilyResource {
 
     @GetMapping("/list")
     public ResponseEntity<List<FamilyDTO>> getAllFamilies() {
-        return new ResponseEntity<>(familyService.getFamilies(), OK);
+        return new ResponseEntity<>(familyService.getFamiliesWithPlants(), OK);
     }
 
     @GetMapping("/listNames")
     public ResponseEntity<List<FamilyDTO>> getFamilyNames() {
-        return new ResponseEntity<>(familyService.getFamiliesWithPlants(), OK);
+        return new ResponseEntity<>(familyService.getFamilies(), OK);
     }
 
     @PostMapping("/add")
