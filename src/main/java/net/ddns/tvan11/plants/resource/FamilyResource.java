@@ -28,7 +28,7 @@ public class FamilyResource {
         return new ResponseEntity<>(familyService.getFamiliesWithPlants(), OK);
     }
 
-    @GetMapping("/listNames")
+    @GetMapping("/list/names")
     public ResponseEntity<List<FamilyDTO>> getFamilyNames() {
         return new ResponseEntity<>(familyService.getFamilies(), OK);
     }
