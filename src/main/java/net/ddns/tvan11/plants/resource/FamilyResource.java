@@ -51,11 +51,11 @@ public class FamilyResource {
         return new ResponseEntity<>(family, NOT_FOUND);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteFamily(@RequestBody Family family) {
-        Optional<Family> oldFamily = familyRepository.findById(family.getId());
+    @DeleteMapping("/delete/{familyId}")
+    public ResponseEntity<HttpStatus> deleteFamily(@PathVariable("familyId") Long familyId) {
+        Optional<Family> oldFamily = familyRepository.findById(familyId);
         if(oldFamily.isPresent()) {
-            familyRepository.delete(family);
+            familyRepository.delete(oldFamily.get());
             return new ResponseEntity<>(OK);
         }
 
