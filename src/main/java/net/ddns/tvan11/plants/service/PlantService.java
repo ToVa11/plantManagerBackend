@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Optional;
 
 import static net.ddns.tvan11.plants.constant.FileConstant.FORWARD_SLASH;
 
@@ -55,5 +56,19 @@ public class PlantService {
                 "/images/" +  plant.getFamily().getName() + FORWARD_SLASH + plant.getName().replaceAll("\\s","")  + FORWARD_SLASH +
                         type + FORWARD_SLASH + plant.getName().replaceAll("\\s","") + originalFileName
         ).toUriString();
+    }
+
+    public PlantDto getPlant(Long plantId) {
+        Optional<Plant> plantOptional = plantRepository.findById(plantId);
+        PlantDto plantDto;
+        if(plantOptional.isPresent()) {
+            Plant plant = plantOptional.get();
+            plantDto = new PlantDto(plant.getId(),plant.getName(),plant.getAmountOfWater(),
+                    plant.getAmountOfLight(),plant.isNeedsSpraying(),plant.getRemarks(),plant.getFamily(),plant.getHeaderImageUrl(),
+                    plant.getProfileImageUrl());
+            return plantDto;
+        }
+        plantDto= new PlantDto();
+        return plantDto;
     }
 }

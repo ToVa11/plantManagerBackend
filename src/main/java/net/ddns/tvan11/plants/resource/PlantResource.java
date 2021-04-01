@@ -19,6 +19,7 @@ import java.util.List;
 
 import static net.ddns.tvan11.plants.constant.FileConstant.HOME_FOLDER;
 import static net.ddns.tvan11.plants.constant.FileConstant.IMAGE_FOLDER;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
@@ -45,5 +46,19 @@ public class PlantResource {
         return new ResponseEntity<>(plantService.addPlant(plant, plantHeaderImage, plantProfileImage), OK);
     }
 
+    @GetMapping("/{plantId}")
+    public ResponseEntity<PlantDto> getPlant(@PathVariable("plantId") Long plantId) {
+        PlantDto plantDto = plantService.getPlant(plantId);
+        if(plantDto.getId() != null) {
+            return new ResponseEntity<>(plantDto, OK);
+        }
+        return new ResponseEntity<>(null, NO_CONTENT);
+    }
+
+    @DeleteMapping("/delete/{plantId}")
+    public ResponseEntity deletePlant(@PathVariable("plantId") Long plantId) {
+        plantRepository.deleteById(plantId);
+        return new ResponseEntity(OK);
+    }
 
 }
