@@ -1,25 +1,24 @@
 package net.ddns.tvan11.plants;
 
-import net.ddns.tvan11.plants.domain.User;
 import net.ddns.tvan11.plants.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Role;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-
-import static net.ddns.tvan11.plants.enumeration.Role.ROLE_SUPER_ADMIN;
+import java.util.List;
 
 @SpringBootApplication
-public class PlantsApplication {
+public class PlantsApplication extends SpringBootServletInitializer {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -27,6 +26,11 @@ public class PlantsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PlantsApplication.class, args);
 
+	}
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(PlantsApplication.class);
 	}
 
 	@Bean
@@ -50,18 +54,18 @@ public class PlantsApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	public CommandLineRunner CommandLineRunner() {
-		return args -> {
-			User user = new User();
-			user.setFirstName("Tom");
-			user.setLastName("Vanelven");
-			user.setEmail("tom.vanelven@hotmail.com");
-			user.setUsername("tvan11");
-			user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
-			user.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
-			user.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
-			userRepository.save(user);
-		};
-	};
+//	@Bean
+//	public CommandLineRunner CommandLineRunner() {
+//		return args -> {
+//			User user = new User();
+//			user.setFirstName("Tom");
+//			user.setLastName("Vanelven");
+//			user.setEmail("tom.vanelven@hotmail.com");
+//			user.setUsername("tvan11");
+//			user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
+//			user.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
+//			user.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
+//			userRepository.save(user);
+//		};
+//	};
 }

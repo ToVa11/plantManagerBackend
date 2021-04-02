@@ -32,10 +32,9 @@ public class PlantService {
         savePlantImage(plantSaved, plantHeaderImage, "header");
         savePlantImage(plantSaved, plantProfileImage, "profile");
 
-        PlantDto plantDto = new PlantDto(plantSaved.getId(),plantSaved.getName(),plantSaved.getAmountOfWater(),
+        return new PlantDto(plantSaved.getId(),plantSaved.getName(),plantSaved.getAmountOfWater(),
         plantSaved.getAmountOfLight(),plantSaved.isNeedsSpraying(),plantSaved.getRemarks(),plantSaved.getFamily(),plantSaved.getHeaderImageUrl(),
                 plantSaved.getProfileImageUrl());
-        return plantDto;
     }
 
     private void savePlantImage(Plant plant, MultipartFile image, String type) throws IOException {
