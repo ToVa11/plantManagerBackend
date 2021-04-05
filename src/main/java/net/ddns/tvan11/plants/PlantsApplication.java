@@ -1,7 +1,9 @@
 package net.ddns.tvan11.plants;
 
+import net.ddns.tvan11.plants.domain.User;
 import net.ddns.tvan11.plants.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static net.ddns.tvan11.plants.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @SpringBootApplication
 public class PlantsApplication extends SpringBootServletInitializer {
@@ -54,18 +58,18 @@ public class PlantsApplication extends SpringBootServletInitializer {
 		return new BCryptPasswordEncoder();
 	}
 
-//	@Bean
-//	public CommandLineRunner CommandLineRunner() {
-//		return args -> {
-//			User user = new User();
-//			user.setFirstName("Tom");
-//			user.setLastName("Vanelven");
-//			user.setEmail("tom.vanelven@hotmail.com");
-//			user.setUsername("tvan11");
-//			user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
-//			user.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
-//			user.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
-//			userRepository.save(user);
-//		};
-//	};
+	@Bean
+	public CommandLineRunner CommandLineRunner() {
+		return args -> {
+			User user = new User();
+			user.setFirstName("Tom");
+			user.setLastName("Vanelven");
+			user.setEmail("tom.vanelven@hotmail.com");
+			user.setUsername("tvan11");
+			user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
+			user.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
+			user.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
+			userRepository.save(user);
+		};
+	};
 }
