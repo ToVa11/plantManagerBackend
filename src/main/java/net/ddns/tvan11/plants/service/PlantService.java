@@ -1,5 +1,6 @@
 package net.ddns.tvan11.plants.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ddns.tvan11.plants.domain.Plant;
 import net.ddns.tvan11.plants.domain.dto.PlantDto;
@@ -37,6 +38,46 @@ public class PlantService {
                 plantSaved.getProfileImageUrl());
     }
 
+    public PlantDto getPlant(Long plantId) {
+        Optional<Plant> plantOptional = plantRepository.findById(plantId);
+        PlantDto plantDto;
+        if(plantOptional.isPresent()) {
+            Plant plant = plantOptional.get();
+            plantDto = new PlantDto(plant.getId(),plant.getName(),plant.getAmountOfWater(),
+                    plant.getAmountOfLight(),plant.isNeedsSpraying(),plant.getRemarks(),plant.getFamily(),plant.getHeaderImageUrl(),
+                    plant.getProfileImageUrl());
+            return plantDto;
+        }
+        plantDto= new PlantDto();
+        return plantDto;
+    }
+
+    public PlantDto updatePlant(String plant, Optional<MultipartFile> plantHeaderImage, Optional<MultipartFile> plantProfileImage) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Plant plantToUpdate = mapper.readValue(plant, Plant.class);
+        Optional<Plant> originalPlant = plantRepository.findById(plantToUpdate.getId());
+        if(originalPlant.isPresent()) {
+            if(plantHeaderImage.isPresent()) {
+                this.savePlantImage(plantToUpdate,plantHeaderImage.get(),"header");
+            }
+            if(plantProfileImage.isPresent()){
+                this.savePlantImage(plantToUpdate,plantProfileImage.get(),"profile");
+            }
+            plantRepository.save(plantToUpdate);
+        }
+
+        return new PlantDto(
+                plantToUpdate.getId(),
+                plantToUpdate.getName(),
+                plantToUpdate.getAmountOfWater(),
+                plantToUpdate.getAmountOfLight(),
+                plantToUpdate.isNeedsSpraying(),
+                plantToUpdate.getRemarks(),
+                plantToUpdate.getFamily(),
+                plantToUpdate.getHeaderImageUrl(),
+                plantToUpdate.getProfileImageUrl());
+    }
+
     private void savePlantImage(Plant plant, MultipartFile image, String type) throws IOException {
         if(image != null) {
             imageService.copyImage(plant, image,type);
@@ -57,17 +98,4 @@ public class PlantService {
         ).toUriString();
     }
 
-    public PlantDto getPlant(Long plantId) {
-        Optional<Plant> plantOptional = plantRepository.findById(plantId);
-        PlantDto plantDto;
-        if(plantOptional.isPresent()) {
-            Plant plant = plantOptional.get();
-            plantDto = new PlantDto(plant.getId(),plant.getName(),plant.getAmountOfWater(),
-                    plant.getAmountOfLight(),plant.isNeedsSpraying(),plant.getRemarks(),plant.getFamily(),plant.getHeaderImageUrl(),
-                    plant.getProfileImageUrl());
-            return plantDto;
-        }
-        plantDto= new PlantDto();
-        return plantDto;
-    }
 }
