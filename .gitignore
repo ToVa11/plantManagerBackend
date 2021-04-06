@@ -33,6 +33,7 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/application.yml
-/src/main/resources/applicationMain.yml
+/src/main/resources/applicationProd.yml
 /pomMain.xml
 /src/main/java/net/ddns/tvan11/plants/PlantsApplicationMain.java
+/src/main/java/net/ddns/tvan11/plants/PlantsApplicationProd.java
