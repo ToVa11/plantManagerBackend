@@ -3,6 +3,8 @@ package net.ddns.tvan11.plants.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -19,6 +21,13 @@ public class User {
     private String password;
     private String email;
     private String profileImageUrl;
+
+    @ManyToMany
+    @JoinTable(name="user_wishList",
+            joinColumns = {@JoinColumn(name = "userId")},
+            inverseJoinColumns = {@JoinColumn(name="plantId")}
+    )
+    private List<Plant> wishList = new ArrayList<>();
 
     private String[] roles;
     private String[] authorities;
@@ -94,6 +103,14 @@ public class User {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public List<Plant> getWishList() {
+        return wishList;
+    }
+
+    public void addPlantToWishList(Plant plant) {
+        this.wishList.add(plant);
+    }
+
     public String[] getRoles() {
         return roles;
     }
@@ -108,5 +125,9 @@ public class User {
 
     public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
+    }
+
+    public void removePlantFromWishList(Plant plant) {
+        this.wishList.remove(plant);
     }
 }
