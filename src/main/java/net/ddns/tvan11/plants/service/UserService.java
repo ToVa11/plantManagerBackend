@@ -51,4 +51,9 @@ public class UserService implements UserDetailsService {
 
         return new UserWishListDTO(user.getId(), user.getWishList().stream().map(Plant::getId).collect(Collectors.toList()));
     }
+
+    public UserWishListDTO getWishlist(String username) {
+        User user = userRepository.findUserByUsername(username);
+        return new UserWishListDTO(user.getId(), user.getWishList().stream().map(Plant::getId).collect(Collectors.toList()));
+    }
 }

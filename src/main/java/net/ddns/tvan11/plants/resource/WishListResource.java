@@ -22,6 +22,12 @@ public class WishListResource {
     @Autowired
     JWTTokenProvider jwtTokenProvider;
 
+    @GetMapping("get")
+    public ResponseEntity<UserWishListDTO> getWishlist(@RequestHeader(name="Authorization") String authorizationHeader) {
+        String username = this.getUsernameFromToken(authorizationHeader);
+        return new ResponseEntity<>(userService.getWishlist(username), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<UserWishListDTO> addPlantToWishList(@RequestBody Plant plant, @RequestHeader(name="Authorization") String authorizationHeader) throws Exception {
         String username = this.getUsernameFromToken(authorizationHeader);
