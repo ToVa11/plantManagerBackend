@@ -29,6 +29,13 @@ public class User {
     )
     private List<Plant> wishList = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name="user_ownList",
+            joinColumns = {@JoinColumn(name = "userId")},
+            inverseJoinColumns = {@JoinColumn(name="plantId")}
+    )
+    private List<Plant> ownList = new ArrayList<>();
+
     private String[] roles;
     private String[] authorities;
 
@@ -111,6 +118,22 @@ public class User {
         this.wishList.add(plant);
     }
 
+    public void removePlantFromWishList(Plant plant) {
+        this.wishList.remove(plant);
+    }
+
+    public List<Plant> getOwnList() {
+        return this.ownList;
+    }
+
+    public void addPlantToOwnList(Plant plant) {
+        this.ownList.add(plant);
+    }
+
+    public void removePlantFromOwnList(Plant plant) {
+        this.ownList.remove(plant);
+    }
+
     public String[] getRoles() {
         return roles;
     }
@@ -125,9 +148,5 @@ public class User {
 
     public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
-    }
-
-    public void removePlantFromWishList(Plant plant) {
-        this.wishList.remove(plant);
     }
 }

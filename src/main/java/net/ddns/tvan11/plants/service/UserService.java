@@ -3,6 +3,7 @@ package net.ddns.tvan11.plants.service;
 import net.ddns.tvan11.plants.domain.Plant;
 import net.ddns.tvan11.plants.domain.User;
 import net.ddns.tvan11.plants.domain.UserPrincipal;
+import net.ddns.tvan11.plants.domain.dto.UserOwnListDTO;
 import net.ddns.tvan11.plants.domain.dto.UserWishListDTO;
 import net.ddns.tvan11.plants.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,34 @@ public class UserService implements UserDetailsService {
     public UserWishListDTO getWishlist(String username) {
         User user = userRepository.findUserByUsername(username);
         return new UserWishListDTO(user.getId(), user.getWishList().stream().map(Plant::getId).collect(Collectors.toList()));
+    }
+
+    public UserOwnListDTO getOwnList(String username) {
+        User user = userRepository.findUserByUsername(username);
+        return new UserOwnListDTO(user.getId(), user.getOwnList().stream().map(Plant::getId).collect(Collectors.toList()));
+    }
+
+    public UserOwnListDTO addPlantToOwnList(String username, Plant plant) throws Exception {
+        User user = userRepository.findUserByUsername(username);
+
+        if(user.getId() <= 0) {
+            throw new Exception("User not found");
+        }
+        user.addPlantToOwnList(plant);
+        userRepository.save(user);
+
+        return new UserOwnListDTO(user.getId(), user.getOwnList().stream().map(Plant::getId).collect(Collectors.toList()));
+    }
+
+    public UserOwnListDTO removePlantFromOwnList(String username, Plant plant) throws Exception {
+        User user = userRepository.findUserByUsername(username);
+
+        if(user.getId() <= 0) {
+            throw new Exception("User not found");
+        }
+        user.removePlantFromOwnList(plant);
+        userRepository.save(user);
+
+        return new UserOwnListDTO(user.getId(), user.getOwnList().stream().map(Plant::getId).collect(Collectors.toList()));
     }
 }
