@@ -4,8 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import net.ddns.tvan11.plants.domain.User;
 import net.ddns.tvan11.plants.domain.UserPrincipal;
+import net.ddns.tvan11.plants.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +31,17 @@ import static java.util.Arrays.stream;
 public class JWTTokenProvider {
 
     public static final String AUTHORITIES = "authorities";
+    public static final String ROLES = "roles";
     public static final String TVAN_11 = "TVAN11";
     @Value("${jwt.secret}")
     private String secret;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public String generateJwtToken(UserPrincipal userPrincipal){
         String[] claims = getClaimsFromUser(userPrincipal);
+
         return JWT.create()
                 .withIssuer(TVAN_11)
                 .withAudience("Plants manager")
@@ -99,8 +108,14 @@ public class JWTTokenProvider {
         for(GrantedAuthority grantedAuthority: userPrincipal.getAuthorities()) {
             authorities.add(grantedAuthority.getAuthority());
         }
+        authorities.addAll(Arrays.asList(getRolesFromUser(userPrincipal)));
 
         return authorities.toArray(new String[0]);
+    }
+
+    private String[] getRolesFromUser(UserPrincipal userPrincipal) {
+        User user = userRepository.findUserByUsername(userPrincipal.getUsername());
+        return user.getRoles();
     }
 
 }

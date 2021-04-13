@@ -5,6 +5,7 @@ import net.ddns.tvan11.plants.domain.User;
 import net.ddns.tvan11.plants.domain.UserPrincipal;
 import net.ddns.tvan11.plants.domain.dto.UserOwnListDTO;
 import net.ddns.tvan11.plants.domain.dto.UserWishListDTO;
+import net.ddns.tvan11.plants.enumeration.Role;
 import net.ddns.tvan11.plants.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +15,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static net.ddns.tvan11.plants.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @Service
 @Transactional
@@ -27,6 +33,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return new UserPrincipal(userRepository.findUserByUsername(username));
+    }
+
+    public User update(User user) {
+        User userToUpdate = userRepository.findUserByUsername(user.getUsername());
+        this.checkAndUpdateFields(user, userToUpdate);
+        return userRepository.save(userToUpdate);
     }
 
     public UserWishListDTO addPlantToWishList(String username, Plant plant) throws Exception {
@@ -85,5 +97,38 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return new UserOwnListDTO(user.getId(), user.getOwnList().stream().map(Plant::getId).collect(Collectors.toList()));
+    }
+
+
+    private void checkAndUpdateFields(User userWithUpdatedFields, User originalUser) {
+        if(userWithUpdatedFields.getEmail() != null && !userWithUpdatedFields.getEmail().equals(originalUser.getEmail())) {
+            originalUser.setEmail(userWithUpdatedFields.getEmail());
+        }
+        if(userWithUpdatedFields.getFirstName() != null && !userWithUpdatedFields.getFirstName().equals(originalUser.getFirstName())) {
+            originalUser.setFirstName(userWithUpdatedFields.getFirstName());
+        }
+        if(userWithUpdatedFields.getLastName() != null && !userWithUpdatedFields.getLastName().equals(originalUser.getLastName())) {
+            originalUser.setLastName(userWithUpdatedFields.getLastName());
+        }
+
+    }
+
+    private void checkAndUpdateRolesAndAuthorities(User userWithUpdatedFields, User originalUser) {
+        if(userWithUpdatedFields.getRoles() != null && userWithUpdatedFields.getRoles() != originalUser.getRoles()) {
+            if(Arrays.stream(userWithUpdatedFields.getRoles()).anyMatch(role -> role.equals(Role.ROLE_SUPER_ADMIN.toString()))) {
+                originalUser.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
+                originalUser.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
+            }
+            else {
+                originalUser.setRoles(userWithUpdatedFields.getRoles());
+                ArrayList<String> authorities = new ArrayList<>();
+                for (String role:
+                        originalUser.getRoles()
+                ) {
+                    authorities.addAll(Arrays.asList(Role.valueOf(role).getAuthorities()));
+                }
+                originalUser.setAuthorities(authorities.toArray(new String[0]));
+            }
+        }
     }
 }

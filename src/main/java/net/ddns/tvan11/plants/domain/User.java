@@ -1,6 +1,7 @@
 package net.ddns.tvan11.plants.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;

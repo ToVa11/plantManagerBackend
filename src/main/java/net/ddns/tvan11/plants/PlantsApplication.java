@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static net.ddns.tvan11.plants.enumeration.Role.ROLE_FAMILY_DELETE;
 import static net.ddns.tvan11.plants.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @SpringBootApplication
@@ -70,6 +71,15 @@ public class PlantsApplication extends SpringBootServletInitializer {
 			user.setRoles(new String[]{ROLE_SUPER_ADMIN.name()});
 			user.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
 			userRepository.save(user);
+			User user1 = new User();
+			user1.setFirstName("Tom");
+			user1.setLastName("Vanelven");
+			user1.setEmail("tom.vanelven@hotmail.com");
+			user1.setUsername("tvan12");
+			user1.setAuthorities(ROLE_FAMILY_DELETE.getAuthorities());
+			user1.setRoles(new String[]{ROLE_FAMILY_DELETE.name()});
+			user1.setPassword("$2y$12$lspwa8mIhda8bwW4cD/QnuLsjoLdF8JbLdmVCDZD7E5ncmvms8Ev2");
+			userRepository.save(user1);
 		};
 	};
 }

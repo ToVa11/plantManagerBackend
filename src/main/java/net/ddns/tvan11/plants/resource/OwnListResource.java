@@ -3,6 +3,7 @@ package net.ddns.tvan11.plants.resource;
 import net.ddns.tvan11.plants.domain.Plant;
 import net.ddns.tvan11.plants.domain.dto.UserOwnListDTO;
 import net.ddns.tvan11.plants.domain.dto.UserWishListDTO;
+import net.ddns.tvan11.plants.service.JwtService;
 import net.ddns.tvan11.plants.service.UserService;
 import net.ddns.tvan11.plants.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +19,25 @@ public class OwnListResource {
     UserService userService;
 
     @Autowired
-    JWTTokenProvider jwtTokenProvider;
+    private JwtService jwtService;
+
 
     @GetMapping("get")
     public ResponseEntity<UserOwnListDTO> getOwnList(@RequestHeader(name="Authorization") String authorizationHeader) {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.getOwnList(username), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<UserOwnListDTO> addPlantToOwnList(@RequestBody Plant plant, @RequestHeader(name="Authorization") String authorizationHeader) throws Exception {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.addPlantToOwnList(username,plant), HttpStatus.OK);
     }
 
     @PostMapping("/delete")
     public ResponseEntity<UserOwnListDTO> removePlantFromWishList(@RequestBody Plant plant, @RequestHeader(name="Authorization") String authorizationHeader) throws Exception {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.removePlantFromOwnList(username, plant), HttpStatus.OK);
     }
 
-    private String getUsernameFromToken(String authorizationHeader) {
-        String token = authorizationHeader.substring("Bearer ".length());
-        return jwtTokenProvider.getSubject(token);
-    }
 }

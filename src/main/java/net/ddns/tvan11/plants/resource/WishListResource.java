@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import net.ddns.tvan11.plants.domain.Plant;
 import net.ddns.tvan11.plants.domain.dto.UserWishListDTO;
+import net.ddns.tvan11.plants.service.JwtService;
 import net.ddns.tvan11.plants.service.UserService;
 import net.ddns.tvan11.plants.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +21,23 @@ public class WishListResource {
     UserService userService;
 
     @Autowired
-    JWTTokenProvider jwtTokenProvider;
+    JwtService jwtService;
 
     @GetMapping("get")
     public ResponseEntity<UserWishListDTO> getWishlist(@RequestHeader(name="Authorization") String authorizationHeader) {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.getWishlist(username), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<UserWishListDTO> addPlantToWishList(@RequestBody Plant plant, @RequestHeader(name="Authorization") String authorizationHeader) throws Exception {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.addPlantToWishList(username,plant), HttpStatus.OK);
     }
 
     @PostMapping("/delete")
     public ResponseEntity<UserWishListDTO> removePlantFromWishList(@RequestBody Plant plant, @RequestHeader(name="Authorization") String authorizationHeader) throws Exception {
-        String username = this.getUsernameFromToken(authorizationHeader);
+        String username = jwtService.getUsernameFromToken(authorizationHeader);
         return new ResponseEntity<>(userService.removePlantFromWishList(username, plant), HttpStatus.OK);
-    }
-
-    private String getUsernameFromToken(String authorizationHeader) {
-        String token = authorizationHeader.substring("Bearer ".length());
-        return jwtTokenProvider.getSubject(token);
     }
 }
