@@ -24,4 +24,9 @@ public class ImageResource {
         return Files.readAllBytes(Paths.get(HOME_FOLDER + FORWARD_SLASH + family + FORWARD_SLASH + plantName+ FORWARD_SLASH + type +FORWARD_SLASH + filename));
     }
 
+    @GetMapping(path = "/profiles/{username}/{fileName}")
+    public byte[] getUserProfileImage(@PathVariable("username") String username, @PathVariable("fileName") String fileName) throws IOException {
+        return Files.readAllBytes(Paths.get(HOME_FOLDER+IMAGE_FOLDER+PROFILE_IMAGES_FOLDER+FORWARD_SLASH+username+FORWARD_SLASH+fileName));
+    }
+
 }

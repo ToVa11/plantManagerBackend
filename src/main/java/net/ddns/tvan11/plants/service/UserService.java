@@ -12,14 +12,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.ddns.tvan11.plants.constant.FileConstant.*;
 import static net.ddns.tvan11.plants.enumeration.Role.ROLE_SUPER_ADMIN;
 
 @Service
@@ -29,6 +33,12 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -110,6 +120,9 @@ public class UserService implements UserDetailsService {
         if(userWithUpdatedFields.getLastName() != null && !userWithUpdatedFields.getLastName().equals(originalUser.getLastName())) {
             originalUser.setLastName(userWithUpdatedFields.getLastName());
         }
+        if(userWithUpdatedFields.getPassword() != null) {
+            originalUser.setPassword(bCryptPasswordEncoder.encode(userWithUpdatedFields.getPassword()));
+        }
 
     }
 
@@ -130,5 +143,20 @@ public class UserService implements UserDetailsService {
                 originalUser.setAuthorities(authorities.toArray(new String[0]));
             }
         }
+    }
+
+    public User updateProfileImage(String username, MultipartFile profileImage) throws IOException {
+        String imageName = imageService.copyProfileImage(username,profileImage);
+        User user = userRepository.findUserByUsername(username);
+        user.setProfileImageUrl(this.getProfileImageUrl(username, imageName));
+        userRepository.save(user);
+        return user;
+    }
+
+    private String getProfileImageUrl(String username, String imageName) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(
+                IMAGE_FOLDER +  PROFILE_IMAGES_FOLDER  + FORWARD_SLASH +
+                        username + FORWARD_SLASH + imageName
+        ).toUriString();
     }
 }
