@@ -109,6 +109,21 @@ public class UserService implements UserDetailsService {
         return new UserOwnListDTO(user.getId(), user.getOwnList().stream().map(Plant::getId).collect(Collectors.toList()));
     }
 
+    public User updateProfileImage(String username, MultipartFile profileImage) throws IOException {
+        String imageName = imageService.copyProfileImage(username,profileImage);
+        User user = userRepository.findUserByUsername(username);
+        user.setProfileImageUrl(this.getProfileImageUrl(username, imageName));
+        userRepository.save(user);
+        return user;
+    }
+
+    public User register(User user) {
+        setAuthorities(user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return user;
+    }
+
 
     private void checkAndUpdateFields(User userWithUpdatedFields, User originalUser) {
         if(userWithUpdatedFields.getEmail() != null && !userWithUpdatedFields.getEmail().equals(originalUser.getEmail())) {
@@ -145,12 +160,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User updateProfileImage(String username, MultipartFile profileImage) throws IOException {
-        String imageName = imageService.copyProfileImage(username,profileImage);
-        User user = userRepository.findUserByUsername(username);
-        user.setProfileImageUrl(this.getProfileImageUrl(username, imageName));
-        userRepository.save(user);
-        return user;
+    private void setAuthorities(User user) {
+        ArrayList<String> authorities = new ArrayList<>();
+        for(String role: user.getRoles()) {
+            authorities.addAll(Arrays.asList(Role.valueOf(role).getAuthorities()));
+        }
+        user.setAuthorities(authorities.toArray(new String[0]));
     }
 
     private String getProfileImageUrl(String username, String imageName) {

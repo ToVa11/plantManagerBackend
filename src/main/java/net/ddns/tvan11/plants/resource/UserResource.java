@@ -47,6 +47,14 @@ public class UserResource {
     @PutMapping("/authorities/update")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<User> updateRolesAndAuthorities(@RequestBody User user) {
+        // Todo: implement in user service
         return new ResponseEntity<>(user, OK);
+    }
+
+    @PostMapping("/register")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<User> registerNewUser(@RequestBody User user) {
+        User newUser = userService.register(user);
+        return new ResponseEntity<>(newUser, OK);
     }
 }
