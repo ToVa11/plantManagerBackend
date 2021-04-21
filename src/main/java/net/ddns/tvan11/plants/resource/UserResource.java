@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -47,8 +48,8 @@ public class UserResource {
     @PutMapping("/authorities/update")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<User> updateRolesAndAuthorities(@RequestBody User user) {
-        // Todo: implement in user service
-        return new ResponseEntity<>(user, OK);
+        User updatedUser = userService.updateRolesAndAuthorities(user);
+        return new ResponseEntity<>(updatedUser, OK);
     }
 
     @PostMapping("/register")
@@ -56,5 +57,13 @@ public class UserResource {
     public ResponseEntity<User> registerNewUser(@RequestBody User user) {
         User newUser = userService.register(user);
         return new ResponseEntity<>(newUser, OK);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, OK);
+
     }
 }

@@ -10,5 +10,5 @@ public class Authority {
     public static final String[] FAMILY_DELETE_AUTHORITIES = {"family:delete"};
     public static final String[] PLANT_ADMIN_AUTHORITIES = {"plant:read","plant:create","plant:update", "plant:delete"};
     public static final String[] FAMILY_ADMIN_AUTHORITIES = {"family:read", "family:create","family:update", "family:delete"};
-    public static final String[] SUPER_ADMIN_AUTHORITIES = {"plant:read","plant:create","plant:update", "plant:delete","family:read", "family:create","family:update", "family:delete"};
+    public static final String[] SUPER_ADMIN_AUTHORITIES = {"plant:read","plant:create","plant:update", "plant:delete","family:read", "family:create","family:update", "family:delete", "user:create", "user:delete"};
 }

@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static net.ddns.tvan11.plants.constant.FileConstant.*;
@@ -124,6 +125,15 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User updateRolesAndAuthorities(User user) {
+        User originalUser = userRepository.findUserByUsername(user.getUsername());
+        checkAndUpdateRolesAndAuthorities(user, originalUser);
+        return originalUser;
+    }
 
     private void checkAndUpdateFields(User userWithUpdatedFields, User originalUser) {
         if(userWithUpdatedFields.getEmail() != null && !userWithUpdatedFields.getEmail().equals(originalUser.getEmail())) {
